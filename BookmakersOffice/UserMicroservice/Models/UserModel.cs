@@ -1,6 +1,6 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace UserMicroservice.Models;
+
+using System.ComponentModel.DataAnnotations;
 
 /// <summary>
 /// User account info representation

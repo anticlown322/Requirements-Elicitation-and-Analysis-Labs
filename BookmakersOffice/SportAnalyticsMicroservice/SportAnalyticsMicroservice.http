@@ -1,6 +1,0 @@
-@SportAnalyticsMicroservice_HostAddress = http://localhost:5230
-
-GET {{SportAnalyticsMicroservice_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
