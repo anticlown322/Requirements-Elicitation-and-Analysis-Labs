@@ -1,7 +1,0 @@
-namespace PaymentMicroservice.Models;
-
-public enum TransactionType
-{
-    Deposit = 1,
-    Withdraw
-}

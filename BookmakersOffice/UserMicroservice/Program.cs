@@ -1,12 +1,13 @@
-using UserMicroservice.Repository;
-using UserMicroservice.Services;
+using Microsoft.EntityFrameworkCore;
+using UserMicroservice.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
+builder.Services.AddDbContext<DefaultUserContext>(opt =>
+    opt.UseInMemoryDatabase("UserList"));
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
 //add xml comments
 builder.Services.AddSwaggerGen(options =>
@@ -16,10 +17,6 @@ builder.Services.AddSwaggerGen(options =>
     var xmlPath = Path.Combine(basePath, "UserMicroservice.xml");
     options.IncludeXmlComments(xmlPath);
 });
-
-//Dependency injection
-builder.Services.AddScoped<IUserService, DefaultUserService>();
-builder.Services.AddScoped<IUserDbContext, DefaultUsersDbContext>();
 
 var app = builder.Build();
 
@@ -31,4 +28,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+//app.UseAuthorization();
+app.MapControllers();
+
 app.Run();
