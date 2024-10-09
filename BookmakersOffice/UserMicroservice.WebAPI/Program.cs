@@ -14,7 +14,7 @@ builder.Services.AddSwaggerGen(options =>
 {
     var basePath = AppContext.BaseDirectory;
 
-    var xmlPath = Path.Combine(basePath, "UserMicroservice.xml");
+    var xmlPath = Path.Combine(basePath, "UserMicroservice.WebAPI.xml");
     options.IncludeXmlComments(xmlPath);
 });
 
