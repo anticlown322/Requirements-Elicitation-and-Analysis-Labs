@@ -1,18 +1,17 @@
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using UserMicroservice.Models;
-using UserMicroservice.Repositories;
+using UserMicroservice.Business.Models;
+using UserMicroservice.Business.Services;
+using UserMicroservice.Data.Entities;
 
-namespace UserMicroservice.Controllers;
+namespace UserMicroservice.WebAPI.Controllers;
 
 /// <summary>
 /// User service controller.
 /// </summary>
-/// <param name="context">User service that must be interacted with.</param>
 [Route("api/users")]
 [ApiController]
-public class UserController(DefaultUserContext context) : ControllerBase
+public class UserController(IUserService userService) : ControllerBase
 {
     /// <summary>
     /// Get list of all users.
@@ -25,14 +24,12 @@ public class UserController(DefaultUserContext context) : ControllerBase
     [ProducesResponseType(typeof(IEnumerable<UserModel>), (int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
-    public async Task<ActionResult<IEnumerable<UserModel>>> GetTodoItems()
+    public async Task<ActionResult> GetAll()
     {
-        var users = await context.TodoItems.ToListAsync();
+        var users = await userService.GetAll();
 
         if (users == null)
-        {
             return NotFound();
-        }
 
         return Ok(users);
     }
@@ -46,12 +43,12 @@ public class UserController(DefaultUserContext context) : ControllerBase
     /// <response code="400">API error</response>
     /// <response code="404">Not found</response>
     [HttpGet("{id}")]
-    [ProducesResponseType(typeof(IEnumerable<UserModel>), (int)HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(UserModel), (int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
-    public async Task<ActionResult<UserModel>> GetUserModel(int id)
+    public async Task<ActionResult<UserModel>> GetById(long id)
     {
-        var userModel = await context.TodoItems.FindAsync(id);
+        var userModel =  await userService.GetById(id);
 
         if (userModel == null)
         {
@@ -70,34 +67,34 @@ public class UserController(DefaultUserContext context) : ControllerBase
     /// <response code="200">Successful</response>
     /// <response code="400">API error</response>
     /// <response code="404">Not found</response>
-    [HttpPut("{id:int}")]
-    [ProducesResponseType(typeof(IEnumerable<UserModel>), (int)HttpStatusCode.OK)]
+    [HttpPut("{id}")]
+    [ProducesResponseType(typeof(UserModel), (int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
-    public async Task<IActionResult> PutUserModel(int id, UserModel userModel)
+    public async Task<IActionResult> Update(long id, UserModel userModel)
     {
         if (id != userModel.Id)
         {
             return BadRequest();
         }
 
-        context.Entry(userModel).State = EntityState.Modified;
-
-        try
+        //mapping without automapper
+        UserEntity userEntity = new UserEntity
         {
-            await context.SaveChangesAsync();
-        }
-        catch (DbUpdateConcurrencyException)
-        {
-            if (!UserModelExists(id))
-            {
-                return NotFound();
-            }
-            
-            throw;
-        }
+            Id = userModel.Id,
+            AppId = userModel.AppId,
+            Balance = userModel.Balance,
+            Login = userModel.Login,
+            IsVerified = userModel.IsVerified,
+            Email = userModel.Email,
+            FirstName = userModel.FirstName,
+            LastName = userModel.LastName,
+            Phone = userModel.Phone
+        };
+        
+        var result = await userService.Update(userEntity);
 
-        return NoContent();
+        return Ok(result);
     }
 
     /// <summary>
@@ -109,12 +106,25 @@ public class UserController(DefaultUserContext context) : ControllerBase
     /// <response code="201">Successful creation</response>
     /// <response code="400">API error</response>
     [HttpPost]
-    public async Task<ActionResult<UserModel>> PostUserModel(UserModel userModel)
+    public async Task<ActionResult<UserModel>> Create(UserModel userModel)
     {
-        context.TodoItems.Add(userModel);
-        await context.SaveChangesAsync();
+        //mapping without automapper
+        UserEntity userEntity = new UserEntity
+        {
+            Id = userModel.Id,
+            AppId = userModel.AppId,
+            Balance = userModel.Balance,
+            Login = userModel.Login,
+            IsVerified = userModel.IsVerified,
+            Email = userModel.Email,
+            FirstName = userModel.FirstName,
+            LastName = userModel.LastName,
+            Phone = userModel.Phone
+        };
+        
+        var result = await userService.Create(userEntity);
 
-        return CreatedAtAction("GetUserModel", new { id = userModel.Id }, userModel);
+        return Created(string.Empty, result);
     }
 
     /// <summary>
@@ -128,22 +138,16 @@ public class UserController(DefaultUserContext context) : ControllerBase
     [ProducesResponseType(typeof(IEnumerable<UserModel>), (int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
-    public async Task<IActionResult> DeleteUserModel(int id)
+    public async Task<IActionResult> RemoveById(long id)
     {
-        var userModel = await context.TodoItems.FindAsync(id);
+        var userModel = await userService.GetById(id);
+        
         if (userModel == null)
         {
             return NotFound();
         }
-
-        context.TodoItems.Remove(userModel);
-        await context.SaveChangesAsync();
-
-        return NoContent();
-    }
-
-    private bool UserModelExists(int id)
-    {
-        return context.TodoItems.Any(e => e.Id == id);
+        
+        var result = await userService.RemoveById(id);
+        return Ok(result);
     }
 }

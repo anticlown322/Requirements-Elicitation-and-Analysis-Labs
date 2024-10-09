@@ -16,9 +16,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gateway.WebApi", "Gateway.W
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityMicroservice.WebAPI", "IdentityMicroservice.WebAPI\IdentityMicroservice.WebAPI.csproj", "{61D0FF61-C998-482D-BFCF-B252D5F29A98}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserMicroservices.Data", "UserMicroservices.Data\UserMicroservices.Data.csproj", "{CF8CB526-DCF8-4BAF-9AF6-D92B6A27AB4F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserMicroservice.Data", "UserMicroservice.Data\UserMicroservice.Data.csproj", "{CF8CB526-DCF8-4BAF-9AF6-D92B6A27AB4F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Identity.Business", "Identity.Business\Identity.Business.csproj", "{B9AD74BE-DC7C-4917-8DA1-2E283B575505}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserMicroservice.Business", "UserMicroservice.Business\UserMicroservice.Business.csproj", "{787DE9A1-01C7-4B29-99DB-5A96F1B085F4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -46,6 +48,10 @@ Global
 		{B9AD74BE-DC7C-4917-8DA1-2E283B575505}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B9AD74BE-DC7C-4917-8DA1-2E283B575505}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B9AD74BE-DC7C-4917-8DA1-2E283B575505}.Release|Any CPU.Build.0 = Release|Any CPU
+		{787DE9A1-01C7-4B29-99DB-5A96F1B085F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{787DE9A1-01C7-4B29-99DB-5A96F1B085F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{787DE9A1-01C7-4B29-99DB-5A96F1B085F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{787DE9A1-01C7-4B29-99DB-5A96F1B085F4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{32E36940-1596-45A8-B3EA-78DE7873C7FA} = {3D63020C-6DBB-4163-BDBB-F5C9A0211A1B}
@@ -55,5 +61,6 @@ Global
 		{61D0FF61-C998-482D-BFCF-B252D5F29A98} = {F753B0E0-2653-4C16-94FD-67CB19757234}
 		{CF8CB526-DCF8-4BAF-9AF6-D92B6A27AB4F} = {32E36940-1596-45A8-B3EA-78DE7873C7FA}
 		{B9AD74BE-DC7C-4917-8DA1-2E283B575505} = {F753B0E0-2653-4C16-94FD-67CB19757234}
+		{787DE9A1-01C7-4B29-99DB-5A96F1B085F4} = {32E36940-1596-45A8-B3EA-78DE7873C7FA}
 	EndGlobalSection
 EndGlobal
