@@ -17,7 +17,7 @@ public class DefaultUserService : IUserService
         return await _iaRepository.GetAll();
     }
 
-    public async Task<UserEntity> GetById(long id)
+    public async Task<UserEntity?> GetById(long id)
     {
         return await _iaRepository.GetById(id);
     }

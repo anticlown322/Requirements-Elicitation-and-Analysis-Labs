@@ -6,7 +6,7 @@ namespace UserMicroservice.Data.Entities;
 /// <summary>
 /// User account info representation
 /// </summary>
-[Table("Users", Schema = "dbo")]
+[Table("UserDB", Schema = "dbo")]
 public class UserEntity
 {
     #region Basic info 
@@ -87,6 +87,4 @@ public class UserEntity
     public string? Phone { get; set; }
 
     #endregion
-    
-    public string Output { get; set; }
 }

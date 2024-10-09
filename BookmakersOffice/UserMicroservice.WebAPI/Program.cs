@@ -12,7 +12,7 @@ builder.Services.AddEndpointsApiExplorer();
 
 //builder.Services.AddScoped<ExceptionHandlerMiddleware>();
 builder.Services.AddDbContext<ApplicationDbContext>(options => 
-    options.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=Users;Trusted_Connection=True;"));
+    options.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=UserDB;Trusted_Connection=True;"));
 builder.Services.AddScoped<IUserRepository, DefaultUserRepository>();
 builder.Services.AddScoped<IUserService, DefaultUserService>();
 

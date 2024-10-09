@@ -51,9 +51,7 @@ public class UserController(IUserService userService) : ControllerBase
         var userModel =  await userService.GetById(id);
 
         if (userModel == null)
-        {
             return NotFound();
-        }
 
         return Ok(userModel);
     }
@@ -111,7 +109,6 @@ public class UserController(IUserService userService) : ControllerBase
         //mapping without automapper
         UserEntity userEntity = new UserEntity
         {
-            Id = userModel.Id,
             AppId = userModel.AppId,
             Balance = userModel.Balance,
             Login = userModel.Login,
