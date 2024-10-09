@@ -4,6 +4,7 @@
         <TargetFramework>net8.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <RootNamespace>UserMicroservice</RootNamespace>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -29,6 +30,7 @@
 
     <ItemGroup>
       <Folder Include="Controllers\" />
+      <Folder Include="Services\" />
     </ItemGroup>
 
 </Project>
