@@ -9,6 +9,6 @@ public interface IUserRepository
     Task<bool> Update(UserEntity someEntity);
     Task<List<UserEntity>> GetAll();
     Task<List<UserEntity>> GetByAppId(Guid appId);
-    Task<UserEntity> GetById(long id);
+    Task<UserEntity?> GetById(long id);
     Task<bool> RemoveById(long id);
 }

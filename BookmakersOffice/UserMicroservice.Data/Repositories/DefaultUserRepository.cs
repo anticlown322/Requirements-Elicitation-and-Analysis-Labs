@@ -30,10 +30,13 @@ public class DefaultUserRepository : IUserRepository
             return Task.FromResult(false);
             
         existedA.AppId = someEntity.AppId;
+        existedA.Balance = someEntity.Balance;
+        existedA.Login = someEntity.Login;
+        existedA.Phone = someEntity.Phone;
         existedA.Email = someEntity.Email;
+        existedA.IsVerified = someEntity.IsVerified;
         existedA.FirstName = someEntity.FirstName;
         existedA.LastName = someEntity.LastName;
-        existedA.Output = someEntity.Output;
             
         if (_dbContext.SaveChanges() > 0) 
             return Task.FromResult(true);
@@ -51,7 +54,7 @@ public class DefaultUserRepository : IUserRepository
         return _aEntity.Where(c => c.AppId == appId).ToListAsync();
     }
 
-    public Task<UserEntity> GetById(long id)
+    public Task<UserEntity?> GetById(long id)
     {
         return _aEntity.FirstOrDefaultAsync(a => a.Id == id);
     }

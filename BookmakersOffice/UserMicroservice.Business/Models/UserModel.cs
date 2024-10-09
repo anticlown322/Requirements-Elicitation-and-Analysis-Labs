@@ -61,6 +61,4 @@ public class UserModel
     public string? Phone { get; set; }
 
     #endregion
-    
-    public string? Output { get; set; }
 }
