@@ -4,9 +4,9 @@ using UserMicroservice.Data.EntityConfigurations;
 
 namespace UserMicroservice.Data;
 
-public class ApplicationDbContext : DbContext
+public class RepositoryContext : DbContext
 {
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+    public RepositoryContext(DbContextOptions<RepositoryContext> options)
         : base(options)
     {
         Database.EnsureCreated(); 

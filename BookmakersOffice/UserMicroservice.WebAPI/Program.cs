@@ -17,7 +17,7 @@ var config = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
     .AddJsonFile("appsettings.json")
     .Build();
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
+builder.Services.AddDbContext<RepositoryContext>(options =>
     options.UseSqlServer(config.GetConnectionString("SqlConnection")));
 
 //custom services
