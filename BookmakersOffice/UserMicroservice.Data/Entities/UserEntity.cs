@@ -7,7 +7,7 @@ namespace UserMicroservice.Data.Entities;
 /// <summary>
 /// User account info representation
 /// </summary>
-[Table("UserDB", Schema = "dbo")]
+//[Table("users", Schema = "dbo")]
 public class UserEntity
 {
     #region Basic info 
