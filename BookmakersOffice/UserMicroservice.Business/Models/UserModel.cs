@@ -23,7 +23,6 @@ public class UserModel
     
     /// <summary>
     /// Current balance in coins. 
-    /// <remarks>The conversion of coins to the RUS is 100 to 1</remarks>
     /// </summary>
     public decimal Balance { get; set; }
     

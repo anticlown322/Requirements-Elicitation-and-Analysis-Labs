@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace UserMicroservice.Data.Entities;
 
@@ -20,28 +21,29 @@ public class UserEntity
     /// <summary>
     /// User account GUID for internal use
     /// </summary>
+    [Column("System ID")]
     public Guid AppId { get; set; }
     
     /// <summary>
     /// Login or name or nick
     /// </summary>
     [Required(AllowEmptyStrings = false, ErrorMessage = "Login required!")]
-    [StringLength(100)]
+    [MaxLength(60, ErrorMessage = "Maximum length for the Login is 60 characters.")]
     public string Login { get; set; }
     
     /// <summary>
     /// Current balance in coins. 
-    /// <remarks>The conversion of coins to the RUS is 100 to 1</remarks>
     /// </summary>
-    [Required(AllowEmptyStrings = false, ErrorMessage = "Balance amount required!")]
+    [Required(ErrorMessage = "Balance amount required!")]
     [Range(0, 100_000_000, ErrorMessage = "Balance amount must be in [1; 100 000 000]")]
+    [Precision(18, 2)]
     public decimal Balance { get; set; }
     
     /// <summary>
     /// Indicates is user account verified or not. 
     /// <remarks>User has additional options and higher limits if user account is verified</remarks>
     /// </summary>
-    [Required(AllowEmptyStrings = false, ErrorMessage = "Info about verification required!")]
+    [Required(ErrorMessage = "Info about verification required!")]
     public bool IsVerified { get; set; }
 
     #endregion
@@ -51,7 +53,7 @@ public class UserEntity
     /// <summary>
     /// Date when account was created. 
     /// </summary>
-    [Required(AllowEmptyStrings = false, ErrorMessage = "Registration date required!")]
+    [Required(ErrorMessage = "Registration date required!")]
     public DateTime RegistrationDate { get; set; }
     
     /// <summary>
@@ -63,27 +65,27 @@ public class UserEntity
     /// User email. 
     /// <remarks>Possible are: gmail, email</remarks>
     /// </summary>
-    [StringLength(100)]
+    [MaxLength(255, ErrorMessage = "Maximum length for the email is 255 characters.")]
     public string? Email { get; set; }
     
     /// <summary>
     /// User's first name. 
     /// <remarks>Remember, it may consist of more than one word!</remarks>
     /// </summary>
-    [StringLength(100)]
+    [MaxLength(100, ErrorMessage = "Maximum length for the first name is 100 characters.")]
     public string? FirstName { get; set; }
     
     /// <summary>
     /// User last name or surname. 
     /// <remarks>Remember, it may consist of more than one word!</remarks>
     /// </summary>
-    [StringLength(100)]
+    [MaxLength(100, ErrorMessage = "Maximum length for the second name is 100 characters.")]
     public string? LastName { get; set; }
     
     /// <summary>
     /// User phone number. 
     /// </summary>
-    [StringLength(15)]
+    [MaxLength(15, ErrorMessage = "Maximum length for the phone number is 15 characters.")]
     public string? Phone { get; set; }
 
     #endregion

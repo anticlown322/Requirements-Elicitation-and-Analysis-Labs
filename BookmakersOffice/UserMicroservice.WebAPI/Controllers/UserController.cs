@@ -109,7 +109,6 @@ public class UserController(IUserService userService) : ControllerBase
         //mapping without automapper
         UserEntity userEntity = new UserEntity
         {
-            AppId = userModel.AppId,
             Balance = userModel.Balance,
             Login = userModel.Login,
             IsVerified = userModel.IsVerified,
