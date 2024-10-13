@@ -1,9 +1,10 @@
-//using UserMicroservice.Middlewares;
+//using TransactionMicroservice.Middlewares;
+
 using Microsoft.EntityFrameworkCore;
-using UserMicroservice.Business.Services;
-using UserMicroservice.Data;
-using UserMicroservice.Data.Repositories;
-using UserMicroservice.WebAPI.Middlewares;
+using PaymentMicroservice.Business.Services;
+using PaymentMicroservice.Data;
+using PaymentMicroservice.Data.Repositories;
+using PaymentMicroservice.WebAPI.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,18 +18,18 @@ var config = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
     .AddJsonFile("appsettings.json")
     .Build();
-builder.Services.AddDbContext<UserRepositoryContext>(options =>
+builder.Services.AddDbContext<TransactionRepositoryContext>(options =>
     options.UseSqlServer(config.GetConnectionString("SqlConnection")));
 
 //custom services
 builder.Services.AddScoped<ExceptionHandlerMiddleware>();
-builder.Services.AddScoped<IUserRepository, DefaultUserRepository>();
-builder.Services.AddScoped<IUserService, DefaultUserService>();
+builder.Services.AddScoped<ITransactionRepository, DefaultTransactionRepository>();
+builder.Services.AddScoped<ITransactionService, DefaultTransactionService>();
 
 //xml documentation
 builder.Services.AddSwaggerGen(options => {
     var basePath = AppContext.BaseDirectory;
-    var xmlPath = Path.Combine(basePath, "UserMicroservice.WebAPI.xml");
+    var xmlPath = Path.Combine(basePath, "PaymentMicroservice.WebAPI.xml");
     options.IncludeXmlComments(xmlPath);
 });
 

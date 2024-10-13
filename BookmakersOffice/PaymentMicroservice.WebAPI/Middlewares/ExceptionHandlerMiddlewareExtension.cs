@@ -1,4 +1,4 @@
-﻿namespace UserMicroservice.WebAPI.Middlewares;
+﻿namespace PaymentMicroservice.WebAPI.Middlewares;
 
 /// <summary>
 /// Extension that helps to connect middleware and application

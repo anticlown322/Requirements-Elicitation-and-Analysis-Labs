@@ -6,10 +6,10 @@ namespace UserMicroservice.Data.Repositories;
 
 public class DefaultUserRepository : IUserRepository
 {
-    private readonly RepositoryContext _dbContext;
+    private readonly UserRepositoryContext _dbContext;
     private readonly DbSet<UserEntity> _aEntity;
         
-    public DefaultUserRepository(RepositoryContext dbContext)
+    public DefaultUserRepository(UserRepositoryContext dbContext)
     {
         _dbContext = dbContext;
         _aEntity = _dbContext.Set<UserEntity>();

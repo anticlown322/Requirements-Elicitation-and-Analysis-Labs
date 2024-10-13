@@ -100,9 +100,6 @@ public class UserController(IUserService userService) : ControllerBase
     /// </summary>
     /// <param name="userModel">User instance that must be added to the list</param>
     /// <returns></returns>
-    /// <response code="200">Successful</response>
-    /// <response code="201">Successful creation</response>
-    /// <response code="400">API error</response>
     [HttpPost]
     public async Task<ActionResult<UserModel>> Create(UserModel userModel)
     {
@@ -137,12 +134,12 @@ public class UserController(IUserService userService) : ControllerBase
     public async Task<IActionResult> RemoveById(long id)
     {
         var userModel = await userService.GetById(id);
-        
+
         if (userModel == null)
         {
             return NotFound();
         }
-        
+
         var result = await userService.RemoveById(id);
         return Ok(result);
     }

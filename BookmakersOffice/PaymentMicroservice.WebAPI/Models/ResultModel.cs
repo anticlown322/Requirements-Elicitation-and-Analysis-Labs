@@ -1,4 +1,4 @@
-﻿namespace UserMicroservice.WebAPI.Models;
+﻿namespace PaymentMicroservice.WebAPI.Models;
 
 /// <summary>
 /// Indicates result of the operation and provides message if needed.
