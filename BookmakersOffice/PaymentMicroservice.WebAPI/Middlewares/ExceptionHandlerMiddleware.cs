@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
-using UserMicroservice.Business.Exceptions;
-using UserMicroservice.WebAPI.Models;
+using PaymentMicroservice.Business.Exceptions;
+using PaymentMicroservice.WebAPI.Models;
 
-namespace UserMicroservice.WebAPI.Middlewares;
+namespace PaymentMicroservice.WebAPI.Middlewares;
 
 /// <summary>
 /// Custom middleware to handle various exceptions and log them
