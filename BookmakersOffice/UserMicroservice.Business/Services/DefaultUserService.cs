@@ -1,4 +1,5 @@
-﻿using UserMicroservice.Data.Entities;
+﻿using PaymentMicroservice.Business.Models;
+using UserMicroservice.Data.Entities;
 using UserMicroservice.Data.Repositories;
 
 namespace UserMicroservice.Business.Services;

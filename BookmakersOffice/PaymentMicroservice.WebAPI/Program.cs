@@ -1,5 +1,6 @@
 //using TransactionMicroservice.Middlewares;
 
+using Kafka.Consumers;
 using Microsoft.EntityFrameworkCore;
 using PaymentMicroservice.Business.Services;
 using PaymentMicroservice.Data;
@@ -25,6 +26,7 @@ builder.Services.AddDbContext<TransactionRepositoryContext>(options =>
 builder.Services.AddScoped<ExceptionHandlerMiddleware>();
 builder.Services.AddScoped<ITransactionRepository, DefaultTransactionRepository>();
 builder.Services.AddScoped<ITransactionService, DefaultTransactionService>();
+builder.Services.AddHostedService<TransactionKafkaConsumer>();
 
 //xml documentation
 builder.Services.AddSwaggerGen(options => {
