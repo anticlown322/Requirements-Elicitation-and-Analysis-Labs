@@ -18,6 +18,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Kafka\Kafka.csproj" />
       <ProjectReference Include="..\PaymentMicroservice.Business\PaymentMicroservice.Business.csproj" />
     </ItemGroup>
 

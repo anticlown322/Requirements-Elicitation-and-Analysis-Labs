@@ -1,4 +1,7 @@
 //using UserMicroservice.Middlewares;
+
+using Kafka.Interfaces;
+using Kafka.Producers;
 using Microsoft.EntityFrameworkCore;
 using UserMicroservice.Business.Services;
 using UserMicroservice.Data;
@@ -21,9 +24,10 @@ builder.Services.AddDbContext<UserRepositoryContext>(options =>
     options.UseSqlServer(config.GetConnectionString("SqlConnection")));
 
 //custom services
-builder.Services.AddScoped<ExceptionHandlerMiddleware>();
+//builder.Services.AddScoped<ExceptionHandlerMiddleware>();
 builder.Services.AddScoped<IUserRepository, DefaultUserRepository>();
 builder.Services.AddScoped<IUserService, DefaultUserService>();
+builder.Services.AddScoped<IKafkaProducer, UserKafkaProducer>();
 
 //xml documentation
 builder.Services.AddSwaggerGen(options => {
@@ -35,7 +39,7 @@ builder.Services.AddSwaggerGen(options => {
 /* Configure the HTTP request pipeline. */
 var app = builder.Build();
 
-app.UseExceptionHandlerMiddleware();
+//app.UseExceptionHandlerMiddleware();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

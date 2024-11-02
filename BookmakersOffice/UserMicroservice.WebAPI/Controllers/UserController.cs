@@ -1,5 +1,10 @@
 using System.Net;
+using Confluent.Kafka;
+using Kafka.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using PaymentMicroservice.Business.Models;
+using PaymentMicroservice.Data.Entities;
 using UserMicroservice.Business.Models;
 using UserMicroservice.Business.Services;
 using UserMicroservice.Data.Entities;
@@ -11,7 +16,7 @@ namespace UserMicroservice.WebAPI.Controllers;
 /// </summary>
 [Route("api/users")]
 [ApiController]
-public class UserController(IUserService userService) : ControllerBase
+public class UserController(IUserService userService, IKafkaProducer kafkaProducer) : ControllerBase
 {
     /// <summary>
     /// Get list of all users.
@@ -48,14 +53,14 @@ public class UserController(IUserService userService) : ControllerBase
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
     public async Task<ActionResult<UserModel>> GetById(long id)
     {
-        var userModel =  await userService.GetById(id);
+        var userModel = await userService.GetById(id);
 
         if (userModel == null)
             return NotFound();
 
         return Ok(userModel);
     }
-    
+
     /// <summary>
     /// Update info about user
     /// </summary>
@@ -89,7 +94,7 @@ public class UserController(IUserService userService) : ControllerBase
             LastName = userModel.LastName,
             Phone = userModel.Phone
         };
-        
+
         var result = await userService.Update(userEntity);
 
         return Ok(result);
@@ -114,7 +119,7 @@ public class UserController(IUserService userService) : ControllerBase
             LastName = userModel.LastName,
             Phone = userModel.Phone
         };
-        
+
         var result = await userService.Create(userEntity);
 
         return Created(string.Empty, result);
@@ -127,7 +132,7 @@ public class UserController(IUserService userService) : ControllerBase
     /// <response code="200">Successful</response>
     /// <response code="400">API error</response>
     /// <response code="404">Not found</response>
-    [HttpDelete("{id}")]
+    [HttpDelete("{id:long}")]
     [ProducesResponseType(typeof(IEnumerable<UserModel>), (int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
@@ -142,5 +147,67 @@ public class UserController(IUserService userService) : ControllerBase
 
         var result = await userService.RemoveById(id);
         return Ok(result);
+    }
+
+    /// <summary>
+    /// Deposit money to account.
+    /// </summary>
+    /// <param name="amount">Amount that will be deposited</param>
+    /// <param name="accountId">Account that makes the deposit action</param>
+    /// <returns></returns>
+    [HttpPost("deposit")]
+    public async Task<ActionResult<TransactionModel>> Deposit(decimal amount, int accountId)
+    {
+        //remember to check id and amount
+        // better to bring logic to user service
+        TransactionModel transaction = new()
+        {
+            Id = new Random().Next(0, 1_000_000_000), //don't do in such way, it's only for testing
+            TransactionDateTime = DateTime.Now,
+            AccountId = accountId,
+            Amount = amount,
+            Type = TransactionType.Deposit
+        };
+        
+        Message<string, string> message = new()
+        {
+            Key = transaction.Id.ToString(), //use better id generation cause it is a war crime
+            Value = JsonConvert.SerializeObject(transaction)
+        };
+        
+        await kafkaProducer.ProduceAsync("transactionTopic", message); //better to specify topic by using config file
+
+        return Created(string.Empty, transaction);
+    }
+
+    /// <summary>
+    /// Withdraw money to account.
+    /// </summary>
+    /// <param name="amount">Amount that will be withdrawn</param>
+    /// <param name="accountId">Account that makes the withdraw action</param>
+    /// <returns></returns>
+    [HttpPost("withdraw")] 
+    public async Task<ActionResult<TransactionModel>> Withdraw(decimal amount, int accountId)
+    {
+        //remember to check id and amount
+        // better to bring logic to user service
+        TransactionModel transaction = new()
+        {
+            Id = new Random().Next(0, 1_000_000_000), //don't do in such way, it's only for testing
+            TransactionDateTime = DateTime.Now,
+            AccountId = accountId,
+            Amount = amount,
+            Type = TransactionType.Withdraw
+        };
+        
+        Message<string, string> message = new()
+        {
+            Key = transaction.Id.ToString(), //use better id generation cause it is a war crime
+            Value = JsonConvert.SerializeObject(transaction)
+        };
+        
+        await kafkaProducer.ProduceAsync("transactionTopic", message); //better to specify topic by using config file
+
+        return Created(string.Empty, transaction);
     }
 }
