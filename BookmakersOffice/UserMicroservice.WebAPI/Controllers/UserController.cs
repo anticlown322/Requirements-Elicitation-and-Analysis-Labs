@@ -16,7 +16,10 @@ namespace UserMicroservice.WebAPI.Controllers;
 /// </summary>
 [Route("api/users")]
 [ApiController]
-public class UserController(IUserService userService, IKafkaProducer kafkaProducer) : ControllerBase
+public class UserController(
+    IUserService userService,
+    IKafkaProducer kafkaProducer,
+    ILogger<UserController> logger) : ControllerBase
 {
     /// <summary>
     /// Get list of all users.
@@ -31,11 +34,26 @@ public class UserController(IUserService userService, IKafkaProducer kafkaProduc
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
     public async Task<ActionResult> GetAll()
     {
+        /*for testing
+        try
+        {
+            throw new Exception("Potential error");
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e, "Something went wrong", 666);
+        }
+         */
+        
         var users = await userService.GetAll();
 
         if (users == null)
+        {
+            logger.LogError("User list can't be found and is null");
             return NotFound();
-
+        }
+            
+        logger.LogInformation("User list successfully returned");
         return Ok(users);
     }
 
@@ -78,6 +96,7 @@ public class UserController(IUserService userService, IKafkaProducer kafkaProduc
     {
         if (id != userModel.Id)
         {
+            logger.LogError($"User with id = {id} not found");
             return BadRequest();
         }
 
@@ -97,6 +116,7 @@ public class UserController(IUserService userService, IKafkaProducer kafkaProduc
 
         var result = await userService.Update(userEntity);
 
+        logger.LogInformation($"User with id = {id} was successfully updated");
         return Ok(result);
     }
 
@@ -122,6 +142,7 @@ public class UserController(IUserService userService, IKafkaProducer kafkaProduc
 
         var result = await userService.Create(userEntity);
 
+        logger.LogInformation("User was successfully created");
         return Created(string.Empty, result);
     }
 
@@ -142,10 +163,13 @@ public class UserController(IUserService userService, IKafkaProducer kafkaProduc
 
         if (userModel == null)
         {
+            logger.LogError($"User with id = {id} not found");
             return NotFound();
         }
 
         var result = await userService.RemoveById(id);
+        
+        logger.LogInformation("User was successfully removed");
         return Ok(result);
     }
 
@@ -158,8 +182,20 @@ public class UserController(IUserService userService, IKafkaProducer kafkaProduc
     [HttpPost("deposit")]
     public async Task<ActionResult<TransactionModel>> Deposit(decimal amount, int accountId)
     {
-        //remember to check id and amount
-        // better to bring logic to user service
+        var userModel = await userService.GetById(accountId);
+
+        if (userModel == null)
+        {
+            logger.LogError($"User with id = {accountId} not found");
+            return NotFound();
+        }
+
+        if (!(amount > 0))
+        {
+            logger.LogError("Incorrect amount for depositing");
+            return BadRequest();
+        }
+        
         TransactionModel transaction = new()
         {
             Id = new Random().Next(0, 1_000_000_000), //don't do in such way, it's only for testing
@@ -168,15 +204,16 @@ public class UserController(IUserService userService, IKafkaProducer kafkaProduc
             Amount = amount,
             Type = TransactionType.Deposit
         };
-        
+
         Message<string, string> message = new()
         {
             Key = transaction.Id.ToString(), //use better id generation cause it is a war crime
             Value = JsonConvert.SerializeObject(transaction)
         };
-        
+
         await kafkaProducer.ProduceAsync("transactionTopic", message); //better to specify topic by using config file
 
+        logger.LogInformation("Deposit transaction successfully created");
         return Created(string.Empty, transaction);
     }
 
@@ -186,11 +223,23 @@ public class UserController(IUserService userService, IKafkaProducer kafkaProduc
     /// <param name="amount">Amount that will be withdrawn</param>
     /// <param name="accountId">Account that makes the withdraw action</param>
     /// <returns></returns>
-    [HttpPost("withdraw")] 
+    [HttpPost("withdraw")]
     public async Task<ActionResult<TransactionModel>> Withdraw(decimal amount, int accountId)
     {
-        //remember to check id and amount
-        // better to bring logic to user service
+        var userModel = await userService.GetById(accountId);
+
+        if (userModel == null)
+        {
+            logger.LogError($"User with id = {accountId} not found");
+            return NotFound();
+        }
+
+        if (userModel.Balance < amount)
+        {
+            logger.LogError($"Account #{accountId} has not enough money for withdrawing {amount}");
+            return BadRequest();
+        }
+
         TransactionModel transaction = new()
         {
             Id = new Random().Next(0, 1_000_000_000), //don't do in such way, it's only for testing
@@ -199,15 +248,16 @@ public class UserController(IUserService userService, IKafkaProducer kafkaProduc
             Amount = amount,
             Type = TransactionType.Withdraw
         };
-        
+
         Message<string, string> message = new()
         {
             Key = transaction.Id.ToString(), //use better id generation cause it is a war crime
             Value = JsonConvert.SerializeObject(transaction)
         };
-        
+
         await kafkaProducer.ProduceAsync("transactionTopic", message); //better to specify topic by using config file
 
+        logger.LogInformation("Withdraw transaction successfully created");
         return Created(string.Empty, transaction);
     }
 }

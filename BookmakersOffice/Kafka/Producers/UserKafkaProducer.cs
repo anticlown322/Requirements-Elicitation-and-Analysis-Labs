@@ -20,7 +20,6 @@ public class UserKafkaProducer : IKafkaProducer
 
     public Task ProduceAsync(string topic, Message<string, string> message)
     {
-        int i = 1;
         return _producer.ProduceAsync(topic, message);
     }
 }
