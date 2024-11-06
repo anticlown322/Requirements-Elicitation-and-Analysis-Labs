@@ -73,7 +73,7 @@ public class UserController(
     {
         var userModel = await userService.GetById(id);
 
-        if (userModel == null)
+        if (userModel == null || userModel.AppId.ToString() == "00000000-0000-0000-0000-000000000000")
             return NotFound();
 
         return Ok(userModel);
@@ -131,13 +131,17 @@ public class UserController(
         //mapping without automapper
         UserEntity userEntity = new UserEntity
         {
+            AppId = Guid.NewGuid(),
+
             Balance = userModel.Balance,
             Login = userModel.Login,
             IsVerified = userModel.IsVerified,
             Email = userModel.Email,
             FirstName = userModel.FirstName,
             LastName = userModel.LastName,
-            Phone = userModel.Phone
+            Phone = userModel.Phone,
+            
+            RegistrationDate = DateTime.Now,
         };
 
         var result = await userService.Create(userEntity);

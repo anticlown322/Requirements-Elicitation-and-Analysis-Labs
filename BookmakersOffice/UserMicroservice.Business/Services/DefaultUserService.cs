@@ -25,8 +25,6 @@ public class DefaultUserService : IUserService
 
     public async Task<long> Create(UserEntity some)
     {
-        some.AppId = Guid.NewGuid();
-        some.RegistrationDate = DateTime.Now;
         var result = await _iaRepository.Create(some);
         return result.Entity.Id;
     }
